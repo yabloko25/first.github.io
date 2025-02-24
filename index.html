@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Список учеников</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 20px;
+        }
+        form {
+            margin-bottom: 20px;
+        }
+        input, button {
+            margin: 5px;
+            padding: 10px;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+        li {
+            background: #f4f4f4;
+            margin: 5px;
+            padding: 10px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Список учеников</h1>
+
+    <form id="studentForm">
+        <input type="text" id="name" placeholder="Имя" required>
+        <input type="text" id="surname" placeholder="Фамилия" required>
+        <input type="date" id="date" required>
+        <input type="number" id="score" placeholder="Баллы" required>
+        <button type="submit">Добавить</button>
+    </form>
+
+    <h2>Список</h2>
+    <ul id="studentList"></ul>
+
+    <h2>Лучший ученик</h2>
+    <p id="topStudent">Нет данных</p>
+
+    <script>
+        const students = [];
+
+        document.getElementById("studentForm").addEventListener("submit", function (e) {
+            e.preventDefault();
+
+            const name = document.getElementById("name").value;
+            const surname = document.getElementById("surname").value;
+            const date = document.getElementById("date").value;
+            const score = parseInt(document.getElementById("score").value);
+
+            const student = { name, surname, date, score };
+            students.push(student);
+
+            updateStudentList();
+            updateTopStudent();
+            
+            this.reset();
+        });
+
+        function updateStudentList() {
+            const list = document.getElementById("studentList");
+            list.innerHTML = "";
+            
+            students.forEach(student => {
+                const li = document.createElement("li");
+                li.textContent = `${student.name} ${student.surname} | Дата: ${student.date} | Баллы: ${student.score}`;
+                list.appendChild(li);
+            });
+        }
+
+        function updateTopStudent() {
+            if (students.length === 0) {
+                document.getElementById("topStudent").textContent = "Нет данных";
+                return;
+            }
+
+            const top = students.reduce((max, student) => (student.score > max.score ? student : max), students[0]);
+            document.getElementById("topStudent").textContent = `Лучший: ${top.name} ${top.surname} (${top.score} баллов)`;
+        }
+    </script>
+
+</body>
+</html>
